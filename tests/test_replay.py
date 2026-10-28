@@ -1,4 +1,5 @@
 import sys, unittest, tempfile
+import pandas as pd
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from verify_market_slice import verify_small_cases, verify_synthetic_correction
@@ -18,5 +19,14 @@ class ReplayTests(unittest.TestCase):
             replay=MarketReplay(folder,'2024-02-07','SH.TEST',1)
             self.assertEqual(replay.query('2024-02-07 09:30:00')['volume'],0)
             self.assertEqual(replay.query('2024-02-07 09:30:01')['volume'],50)
+    def test_missing_passive_order_rejected(self):
+        with tempfile.TemporaryDirectory() as folder:
+            generate(folder)
+            path=Path(folder)/'df_order.csv'
+            orders=pd.read_csv(path)
+            orders[orders.side!='sell'].to_csv(path,index=False)
+            replay=MarketReplay(folder,'2024-02-07','SH.TEST',1)
+            with self.assertRaises(ValueError):
+                replay.query('2024-02-07 09:30:01')
 
 if __name__=='__main__': unittest.main()
