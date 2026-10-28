@@ -1,0 +1,2 @@
+date,symbol,channel,index,price,quantity,trade_time,other_info
+20240207,SH.TEST,1,1,11,50,2024-02-07 09:30:01+08:00,external(buy)

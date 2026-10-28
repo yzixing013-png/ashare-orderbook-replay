@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.venv/
+.env*
+*.csv
+!examples/synthetic/*.csv
+盘口示例.json
